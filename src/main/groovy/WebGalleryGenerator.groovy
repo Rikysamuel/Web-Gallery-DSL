@@ -14,5 +14,7 @@ HTMLGenerator.make {
     login true
     upload true
     template 1
+    directory "E:\\tes"
+    output "index.html"
     html
 }

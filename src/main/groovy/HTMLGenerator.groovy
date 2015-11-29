@@ -10,6 +10,8 @@ class HTMLGenerator {
     boolean login
     boolean upload
     int template
+    String parentLocation
+    String fileName
 
     def static writer = new StringWriter()
 
@@ -43,12 +45,28 @@ class HTMLGenerator {
         this.template = template
     }
 
+    def directory(String location) {
+        this.parentLocation = location
+    }
+
+    def output(String fileName) {
+        this.fileName = fileName
+    }
+
     def getHtml() {
         if (name != null) {
             if (description != null) {
                 if (profilePicPath != null) {
                     if (template > 0) {
-                        doHtml(this)
+                        if (parentLocation != null) {
+                            if (fileName != null) {
+                                doHtml(this)
+                            } else {
+                                println "output name is not defined"
+                            }
+                        } else {
+                            println "directory location is not defined"
+                        }
                     } else {
                         println "template is not defined!"
                     }
@@ -68,97 +86,40 @@ class HTMLGenerator {
 
         markup.html() {
             head {
-                title("Web Gallery")
-                link(href: "assets/css/bootstrap.min.css", rel: "stylesheet")
-                link(href: "assets/css/bootstrap-theme.min.css", rel:"stylesheet")
+                title(htmlDsl.name)
+                meta(charset: "utf-8")
+                link(href: "css/style1.css", rel:"stylesheet", type:"text/css", charset: "utf-8")
             }
             body {
-                div class: "container", {
-                    div class: "row", {
-                        div class: "col-md-5", {
-                            mkp.yield ""
+                span(id: "background")
+                div id: "page", {
+                    div id: "sidebar", {
+                        div id: "title", {
+                            mkp.yield htmlDsl.name
                         }
-                        div class: "col-md-3", {
-                            h1("Web Gallery")
-                        }
-                        div class: "col-md-4", {
-                            if (htmlDsl.login) {
-                                div class: "row", {
-                                    form class: "form-horizontal", role: "form", id: "proceed", action: "javascript:;", {
-                                        div class: "form-group", {
-                                            label for: "username", class: "col-sm-4 control-label", {
-                                                mkp.yield "Username"
-                                            }
-                                            div class: "col-sm-8", {
-                                                input type: "input", class: "form-control", id:"username", placeholder:"Username"
-                                            }
-                                        }
-                                        div class: "form-group", {
-                                            label for: "password", class: "col-sm-4 control-label", {
-                                                mkp.yield "Password"
-                                            }
-                                            div class: "col-sm-8", {
-                                                input type: "password", class: "form-control", id:"password", placeholder:"Password"
-                                            }
-                                        }
-                                        div class: "form-group", {
-                                            div class: "col-sm-offset-5 col-sm-7", {
-                                                input type: "submit", class: "btn btn-default", value: "Login"
-                                            }
-                                        }
-                                    }
-                                }
-                            } else {
-                                mkp.yield ""
+                        ul id: "profile", {
+                            li {
+                                mkp.yield htmlDsl.description
                             }
                         }
+
                     }
 
-                    div class: "row", {
-                        div class: "col-md-4", {
-                            mkp.yield ""
-                        }
-                        div class: "col-md-4", {
-                            a href: "#", class: "thumbnail", {
-                                img(src: htmlDsl.profilePicPath, alt:"picture")
+                    div id: "contents", {
+                        ul class: "images", {
+                            li {
+                                img(src: "images/illustration1.jpg", alt: "")
+                                p {
+                                    mkp.yield "Lorem Ipsum"
+                                }
+
                             }
-                        }
-                        div class: "col-md-4", {
-                            mkp.yield ""
-                        }
-                    }
-
-                    div class: "row", {
-                        div class: "col-md-4", {
-                            mkp.yield ""
-                        }
-                        div class: "col-md-4", {
-                            div class: "row", {
-                                div class: "col-md-2", {
-                                    mkp.yield ""
-                                }
-                                div class: "col-md-9", {
-                                    h3(htmlDsl.name)
-                                }
-                                div class: "col-md-1", {
-                                    mkp.yield ""
+                            li {
+                                img(src: "images/illustration2.jpg", alt:"")
+                                p {
+                                    mkp.yield "tes"
                                 }
                             }
-                        }
-                        div class: "col-md-4", {
-                            mkp.yield ""
-                        }
-                    }
-
-                    div class: "row", {
-                        div class: "col-md-4", {
-                            mkp.yield ""
-                        }
-                        div class: "col-md-4", {
-                            p(style:"margin-top:2em; font-style: italic; font-size: 12px;", htmlDsl.description)
-                        }
-                        div class: "col-md-4", {
-                            mkp.yield ""
                         }
                     }
                 }
@@ -171,70 +132,32 @@ class HTMLGenerator {
 
         markup.html() {
             head {
-                title("Web Gallery")
-                link(href: "assets/css/bootstrap.min.css", rel: "stylesheet")
-                link(href: "assets/css/bootstrap-theme.min.css", rel:"stylesheet")
+                title("Your Gallery")
+                meta(charset: "utf-8")
+                link(href: "css/style2.css", rel: "stylesheet", type: "text/css", charset: "utf-8")
             }
             body {
-                div class: "container", {
-                    div class: "row", {
-                        div class: "col-md-5", {
-                            mkp.yield ""
+                div class: "page", {
+                    header class: "title", {
+                        img(src: "images/icon_Ridenia_128.jpg", alt: "logo")
+                        h1 {
+                            mkp.yield htmlDsl.name
                         }
-                        div class: "col-md-3", {
-                            h1("Web Gallery")
-                        }
-                        div class: "col-md-4", {
+                    }
+                    div class: "contents", {
+                        /*div class: "imageContainer", {
+                            img(src: "images/1.jpg", alt: "")
+                            p(class: "desc", "Lorem ipsum")
+                        }*/
+
+                        div class: "clearfix", {
                             mkp.yield ""
                         }
                     }
-
-                    div class: "row", {
-                        div class: "col-md-4", {
-                            mkp.yield ""
-                        }
-                        div class: "col-md-4", {
-                            a href: "#", class: "thumbnail", {
-                                img(src: htmlDsl.profilePicPath, alt:"picture")
-                            }
-                        }
-                        div class: "col-md-4", {
-                            mkp.yield ""
-                        }
-                    }
-
-                    div class: "row", {
-                        div class: "col-md-4", {
-                            mkp.yield ""
-                        }
-                        div class: "col-md-4", {
-                            div class: "row", {
-                                div class: "col-md-2", {
-                                    mkp.yield ""
-                                }
-                                div class: "col-md-9", {
-                                    h3(htmlDsl.name)
-                                }
-                                div class: "col-md-1", {
-                                    mkp.yield ""
-                                }
-                            }
-                        }
-                        div class: "col-md-4", {
-                            mkp.yield ""
-                        }
-                    }
-
-                    div class: "row", {
-                        div class: "col-md-4", {
-                            mkp.yield ""
-                        }
-                        div class: "col-md-4", {
-                            p(style:"margin-top:2em; font-style: italic; font-size: 12px;", htmlDsl.description)
-                        }
-                        div class: "col-md-4", {
-                            mkp.yield ""
-                        }
+                }
+                footer {
+                    p{
+                        mkp.yield "Online Gallery copyright BlaBlaBla 2015."
                     }
                 }
             }
@@ -332,7 +255,10 @@ class HTMLGenerator {
                 break;
         }
 
-        File file = new File("out", "tes.html");
+        File file = new File(htmlDsl.parentLocation, htmlDsl.fileName);
+        if (!file.exists()) {
+            file.mkdirs()
+        }
         if (file.exists()) {
             file.delete();
             file.createNewFile();
@@ -341,7 +267,7 @@ class HTMLGenerator {
         file << writer;
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         HTMLGenerator.make {
             name "Lorem Ipsum Dolor Sit"
             picture "assets//img//landscape0.jpg"
@@ -356,5 +282,5 @@ class HTMLGenerator {
             template 1
             html
         }
-    }
+    }*/
 }
