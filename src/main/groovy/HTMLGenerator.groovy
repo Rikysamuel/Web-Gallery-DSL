@@ -87,7 +87,7 @@ class HTMLGenerator {
         }
 //        println writer
 
-        new File("tes.html") << writer;
+        new File("tes.html").newWriter() << writer;
 
     }
 
