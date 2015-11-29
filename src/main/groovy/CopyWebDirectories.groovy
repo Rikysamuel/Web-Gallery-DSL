@@ -7,15 +7,12 @@ class CopyWebDirectories {
     public static void moveFileIntoOutFolder(String path,String dest) {
         new File(path).eachFile { file->
             if (file.file) {
-                println(file.getAbsolutePath())
                 def src = new File(file.getAbsolutePath())
                 def dst = new File(dest + "\\" + file.getName())
                 dst << src.text
             } else {
-                println(file.getAbsolutePath())
-                println('out\\' + file.getName())
-                new File('out\\' + file.getName()).mkdir()
-                moveFileIntoOutFolder(file.getAbsolutePath(),'out\\' + file.getName())
+                new File(dest + file.getName()).mkdir()
+                moveFileIntoOutFolder(file.getAbsolutePath(),dest + file.getName())
             }
         }
     }
