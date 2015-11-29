@@ -328,7 +328,7 @@ class HTMLGenerator {
                 templateThree(htmlDsl);
                 break;
             default:
-                templateOne(htmlDsl);
+                println "template is not available"
                 break;
         }
 
