@@ -1,5 +1,9 @@
 import groovy.xml.MarkupBuilder
 
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.Paths
+
 /**
  * Created by rikysamuel on 11/27/2015.
  */
@@ -78,6 +82,19 @@ class HTMLGenerator {
             }
         } else {
             println "name is not defined!"
+        }
+    }
+
+    public static void moveFileIntoOutFolder(String path, String dest) {
+        new File(path).eachFile { file->
+            if (file.file) {
+                File src = new File(file.getAbsolutePath())
+                File dst = new File(dest + "\\" + file.getName())
+                dst.bytes << src.bytes
+            } else {
+                new File(dest + "\\" + file.getName()).mkdir()
+                moveFileIntoOutFolder(file.getAbsolutePath(),dest + "\\" + file.getName())
+            }
         }
     }
 
@@ -255,10 +272,14 @@ class HTMLGenerator {
                 break;
         }
 
-        File file = new File(htmlDsl.parentLocation, htmlDsl.fileName);
-        if (!file.exists()) {
-            file.mkdirs()
+        File directory = new File(htmlDsl.parentLocation);
+        if (!directory.exists()) {
+            directory.mkdirs()
         }
+
+//        moveFileIntoOutFolder("resources/", htmlDsl.parentLocation)
+
+        File file = new File(htmlDsl.parentLocation, htmlDsl.fileName);
         if (file.exists()) {
             file.delete();
             file.createNewFile();
