@@ -89,9 +89,9 @@ class HTMLGenerator {
     public static void moveFileIntoOutFolder(String path, String dest) {
         new File(path).eachFile { file->
             if (file.file) {
-                File src = new File(file.getAbsolutePath())
-                File dst = new File(dest + "\\" + file.getName())
-                dst.bytes << src.bytes
+                File src = new File(file.getAbsolutePath()).newDataInputStream()
+                File dst = new File(dest + "\\" + file.getName()).newDataOutputStream()
+                dst << src
             } else {
                 new File(dest + "\\" + file.getName()).mkdir()
                 moveFileIntoOutFolder(file.getAbsolutePath(),dest + "\\" + file.getName())
