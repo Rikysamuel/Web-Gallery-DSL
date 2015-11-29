@@ -1,9 +1,5 @@
 import groovy.xml.MarkupBuilder
 
-import java.nio.file.Files
-import java.nio.file.Path
-import java.nio.file.Paths
-
 /**
  * Created by rikysamuel on 11/27/2015.
  */
@@ -14,6 +10,7 @@ class HTMLGenerator {
     boolean login
     boolean upload
     int template
+    String footer
     String parentLocation
     String fileName
 
@@ -47,6 +44,10 @@ class HTMLGenerator {
 
     def template(int template) {
         this.template = template
+    }
+
+    def footer(String footer) {
+        this.footer = footer
     }
 
     def directory(String location) {
@@ -149,34 +150,55 @@ class HTMLGenerator {
 
         markup.html() {
             head {
-                title("Your Gallery")
+                title(htmlDsl.name)
                 meta(charset: "utf-8")
                 link(href: "css/style2.css", rel: "stylesheet", type: "text/css", charset: "utf-8")
             }
             body {
-                div class: "page", {
+                div class: "lightbox", {
+                    div class: "center", {
+                        img(class: "fullimg", src: "", alt: "")
+                        div class: "fulldesc", {
+                            mkp.yield ""
+                        }
+                    }
+                }
+
+                main class: "page", {
                     header class: "title", {
-                        img(src: "images/icon_Ridenia_128.jpg", alt: "logo")
+                        img(src: htmlDsl.profilePicPath, alt: "logo")
                         h1 {
                             mkp.yield htmlDsl.name
                         }
+                        h2 {
+                            mkp.yield htmlDsl.description
+                        }
                     }
                     div class: "contents", {
-                        /*div class: "imageContainer", {
-                            img(src: "images/1.jpg", alt: "")
-                            p(class: "desc", "Lorem ipsum")
-                        }*/
+                        div class: "imageContainer", {
+                            img(class: "preview", src: "images/1.jpg", alt: "Lorem ipsum1")
+                            p(class: "desc", "Lorem ipsum") {
+                                mkp.yield ""
+                            }
+                        }
 
                         div class: "clearfix", {
                             mkp.yield ""
                         }
                     }
-                }
-                footer {
-                    p{
-                        mkp.yield "Online Gallery copyright BlaBlaBla 2015."
+
+                    footer {
+                        p{
+                            mkp.yield htmlDsl.footer
+                        }
                     }
                 }
+            }
+            script(src: "jquery/jquery.min.js") {
+                mkp.yield ""
+            }
+            script(src: "jquery/script.js") {
+                mkp.yield ""
             }
         }
     }
