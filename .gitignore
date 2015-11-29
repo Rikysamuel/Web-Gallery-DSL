@@ -33,4 +33,3 @@ proguard/
 .gradle/
 build/
 bin/
-out/
