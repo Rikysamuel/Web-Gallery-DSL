@@ -11,8 +11,8 @@ class CopyWebDirectories {
                 def dst = new File(dest + "\\" + file.getName())
                 dst << src.text
             } else {
-                new File(dest + file.getName()).mkdir()
-                moveFileIntoOutFolder(file.getAbsolutePath(),dest + file.getName())
+                new File(dest + "\\" + file.getName()).mkdir()
+                moveFileIntoOutFolder(file.getAbsolutePath(),dest + "\\" + file.getName())
             }
         }
     }
