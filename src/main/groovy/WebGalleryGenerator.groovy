@@ -10,7 +10,7 @@ HTMLGenerator.make {
     description "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod"
     upload false
     footer "Online Gallery copyright BlaBlaBla 2015."
-    directory "F:\\xampp\\htdocs\\newA"
+    directory "F:\\xampp\\htdocs\\new"
     output "index"
-    templateThree
+    templateTwo
 }

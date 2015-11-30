@@ -62,6 +62,30 @@ class HTMLGenerator {
         println "Wrong Syntax"
     }
 
+    def getTemplateOne() {
+        if (name != null) {
+            if (description != null) {
+                if (profilePicPath != null) {
+                    if (parentLocation != null) {
+                        if (fileName != null) {
+                            doTemplateOne(this)
+                        } else {
+                            println "output name is not defined"
+                        }
+                    } else {
+                        println "directory location is not defined"
+                    }
+                } else {
+                    println "profile picture path is not defined!"
+                }
+            } else {
+                println "description is not defined!"
+            }
+        } else {
+            println "name is not defined!"
+        }
+    }
+
     def getTemplateTwo() {
         if (name != null) {
             if (description != null) {
@@ -165,6 +189,41 @@ class HTMLGenerator {
                 "?>"
     }
 
+    def static String indexPhpCode3() {
+        return "<?php\n" +
+                "  foreach(glob('images/*.jpg') as \$file) {\n" +
+                "    \$dpath = substr(\$file, 0, -3) . \"desc\";\n" +
+                "    \$handle = fopen(\$dpath, \"r\");\n" +
+                "    if (\$handle) {\n" +
+                "      \$desc = fgets(\$handle);\n" +
+                "      fclose(\$handle);\n" +
+                "    } else {\n" +
+                "      echo \"ERROR OPENING DESCRIPTION FILE\";\n" +
+                "    }\n" +
+                "\n" +
+                "    echo <<< EOT\n" +
+                "<?php\n" +
+                "  foreach(glob('images/*.jpg') as \$file) {\n" +
+                "    \$dpath = substr(\$file, 0, -3) . \"desc\";\n" +
+                "    \$handle = fopen(\$dpath, \"r\");\n" +
+                "    if (\$handle) {\n" +
+                "      \$desc = fgets(\$handle);\n" +
+                "      fclose(\$handle);\n" +
+                "    } else {\n" +
+                "      echo \"ERROR OPENING DESCRIPTION FILE\";\n" +
+                "    }\n" +
+                "\n" +
+                "    echo <<< EOT\n" +
+                "    <li>\n" +
+                "      <img src=\"\$file\" alt=\"\$desc\" />\n" +
+                "      <p>\$desc</p>\n" +
+                "    </li>\n" +
+                "EOT;\n" +
+                "\n" +
+                "  }\n" +
+                "?>"
+    }
+
     def static String uploadPhpCode() {
         return "<?php\n" +
                 "// error_reporting(E_ERROR | E_WARNING | E_PARSE);\n" +
@@ -236,19 +295,9 @@ class HTMLGenerator {
 
                     div id: "contents", {
                         ul class: "images", {
-                            li {
-                                img(src: "images/illustration1.jpg", alt: "")
-                                p {
-                                    mkp.yield "Lorem Ipsum"
-                                }
-
-                            }
-                            li {
-                                img(src: "images/illustration2.jpg", alt:"")
-                                p {
-                                    mkp.yield "tes"
-                                }
-                            }
+                            mkp.yieldUnescaped "\n"
+                            mkp.yieldUnescaped indexPhpCode3()
+                            mkp.yieldUnescaped "\n"
                         }
                     }
                 }
@@ -289,8 +338,10 @@ class HTMLGenerator {
                         }
                         h2 {
                             mkp.yield htmlDsl.description
-                            a href: "php/upload.php", {
-                                mkp.yield "Upload"
+                            if (htmlDsl.upload) {
+                                a href: "php/upload.php", {
+                                    mkp.yield "Upload"
+                                }
                             }
                         }
                     }
@@ -414,6 +465,30 @@ class HTMLGenerator {
                 }
             }
         }
+    }
+
+    private static doTemplateOne(HTMLGenerator htmlDsl) {
+        if (!new File(htmlDsl.parentLocation).exists()) {
+            new File(htmlDsl.parentLocation).mkdirs();
+        }
+
+        templateOne(htmlDsl)
+
+        File directory = new File(htmlDsl.parentLocation);
+        if (!directory.exists()) {
+            directory.mkdirs()
+        }
+
+        CopyWebDirectories.createAvatar(htmlDsl.profilePicPath, htmlDsl.parentLocation)
+        CopyWebDirectories.moveFileIntoOutFolder("resources", htmlDsl.parentLocation)
+
+        File file = new File(htmlDsl.parentLocation, htmlDsl.fileName);
+        if (file.exists()) {
+            file.delete();
+            file.createNewFile();
+        }
+
+        file << writer;
     }
 
     private static doTemplateTwo(HTMLGenerator htmlDsl) {
