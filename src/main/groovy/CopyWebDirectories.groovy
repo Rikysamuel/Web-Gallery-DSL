@@ -18,7 +18,7 @@ class CopyWebDirectories {
     }
 
     public static void createAvatar(String source, String destination) {
-        new File(destination + "avatar.jpg").newDataOutputStream() << new File(source).newDataInputStream()
+        new File(destination, "avatar.jpg").newDataOutputStream() << new File(source).newDataInputStream()
     }
 
     public static void main(String[] args) {
