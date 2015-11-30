@@ -175,7 +175,7 @@ class HTMLGenerator {
 
                 main class: "page", {
                     header class: "title", {
-                        img(src: htmlDsl.profilePicPath, alt: "logo")
+                        img(src: "avatar.jpg", alt: "logo")
                         h1 {
                             mkp.yield htmlDsl.name
                         }
@@ -229,7 +229,9 @@ class HTMLGenerator {
             directory.mkdirs()
         }
 
-        createAvatar(htmlDsl.profilePicPath, htmlDsl.parentLocation)
+        println htmlDsl.profilePicPath
+        println htmlDsl.parentLocation
+        CopyWebDirectories.createAvatar(htmlDsl.profilePicPath, htmlDsl.parentLocation)
         CopyWebDirectories.moveFileIntoOutFolder("resources", htmlDsl.parentLocation)
 
         File file = new File(htmlDsl.parentLocation, htmlDsl.fileName);

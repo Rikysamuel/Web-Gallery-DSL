@@ -17,12 +17,12 @@ class CopyWebDirectories {
         }
     }
 
-    public static void createAvatar(String source) {
-        new File(new File(source).getPath()).newDataInputStream() << new File(new File("avatar.jpg").getName()).newDataOutputStream()
+    public static void createAvatar(String source, String destination) {
+        new File(destination + "avatar.jpg").newDataOutputStream() << new File(source).newDataInputStream()
     }
 
     public static void main(String[] args) {
-        createAvatar("E:\\01.jpg", "E:\\")
+        createAvatar()
     }
 }
 
