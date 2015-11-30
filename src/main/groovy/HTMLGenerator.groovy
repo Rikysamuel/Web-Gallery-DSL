@@ -8,10 +8,10 @@ class HTMLGenerator {
     String description
     String profilePicPath
     boolean upload
-    int template
     String footer
     String parentLocation
     String fileName
+    String color
 
     def static writer = new StringWriter()
 
@@ -25,6 +25,10 @@ class HTMLGenerator {
         this.name = name
     }
 
+    def color(String color) {
+        this.color = color
+    }
+
     def picture(String picPath) {
         this.profilePicPath = picPath
     }
@@ -35,10 +39,6 @@ class HTMLGenerator {
 
     def upload(boolean useUpload) {
         this.upload = useUpload
-    }
-
-    def template(int template) {
-        this.template = template
     }
 
     def footer(String footer) {
@@ -57,22 +57,18 @@ class HTMLGenerator {
         println "Wrong Syntax"
     }
 
-    def getHtml() {
+    def getTemplateTwo() {
         if (name != null) {
             if (description != null) {
                 if (profilePicPath != null) {
-                    if (template > 0) {
-                        if (parentLocation != null) {
-                            if (fileName != null) {
-                                doHtml(this)
-                            } else {
-                                println "output name is not defined"
-                            }
+                    if (parentLocation != null) {
+                        if (fileName != null) {
+                            doTemplateTwo(this)
                         } else {
-                            println "directory location is not defined"
+                            println "output name is not defined"
                         }
                     } else {
-                        println "template is not defined!"
+                        println "directory location is not defined"
                     }
                 } else {
                     println "profile picture path is not defined!"
@@ -176,8 +172,14 @@ class HTMLGenerator {
                 main class: "page", {
                     header class: "title", {
                         img(src: "avatar.jpg", alt: "logo")
-                        h1 {
-                            mkp.yield htmlDsl.name
+                        if (htmlDsl.color == null) {
+                            h1 {
+                                mkp.yield htmlDsl.name
+                            }
+                        } else {
+                            h1 style: "color:" + htmlDsl.color + ";", {
+                                mkp.yield htmlDsl.name
+                            }
                         }
                         h2 {
                             mkp.yield htmlDsl.description
@@ -211,26 +213,18 @@ class HTMLGenerator {
         }
     }
 
-    private static doHtml(HTMLGenerator htmlDsl) {
-        switch (htmlDsl.template) {
-            case 1 :
-                templateOne(htmlDsl);
-                break;
-            case 2 :
-                templateTwo(htmlDsl);
-                break;
-            default:
-                println "template is not available"
-                break;
+    private static doTemplateTwo(HTMLGenerator htmlDsl) {
+        if (!new File(htmlDsl.parentLocation).exists()) {
+            new File(htmlDsl.parentLocation).mkdirs();
         }
+
+        templateTwo(htmlDsl)
 
         File directory = new File(htmlDsl.parentLocation);
         if (!directory.exists()) {
             directory.mkdirs()
         }
 
-        println htmlDsl.profilePicPath
-        println htmlDsl.parentLocation
         CopyWebDirectories.createAvatar(htmlDsl.profilePicPath, htmlDsl.parentLocation)
         CopyWebDirectories.moveFileIntoOutFolder("resources", htmlDsl.parentLocation)
 
