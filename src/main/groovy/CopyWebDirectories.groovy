@@ -17,8 +17,12 @@ class CopyWebDirectories {
         }
     }
 
-    public static void main(String[] arg) {
-        CopyWebDirectories.moveFileIntoOutFolder("D:\\Tes","out\\")
+    public static void createAvatar(String source) {
+        new File(new File(source).getPath()).newDataInputStream() << new File(new File("avatar.jpg").getName()).newDataOutputStream()
+    }
+
+    public static void main(String[] args) {
+        createAvatar("E:\\01.jpg", "E:\\")
     }
 }
 

@@ -15,7 +15,6 @@ main.page {
   box-shadow: 0px 2px 4px 1px #222;
   border-radius: 5px;
   margin: 20px auto;
-  opacity: 0;
 }
 
 
@@ -86,6 +85,13 @@ header.title h2 {
   font-weight: 100;
 }
 
+header.title h2 a {
+  padding: 0px 0px 0px 15px;
+  font-size: 0.8em;
+  text-decoration: none;
+  color: #66f;
+}
+
 
 div.contents {
   padding: 10px;
@@ -99,6 +105,7 @@ div.contents div.imageContainer {
   margin: 10px;
   box-shadow: 0px 1px 3px 0px #88a;
   border-radius: 3px;
+  text-align: center;
 }
 
 div.contents div.imageContainer img {
@@ -111,6 +118,7 @@ div.contents div.imageContainer p.desc {
   margin: 2px;
   font-family: 'Open Sans', sans-serif;
   font-size: 12px;
+  text-align: left;
 }
 
 div.contents div.clearfix {
@@ -118,6 +126,33 @@ div.contents div.clearfix {
   float: none;
 }
 
+div.contents form {
+  text-align: center;
+  margin: 20px 0px 30px 0px;
+}
+
+div.contents form span {
+  font-family: 'Open Sans', sans-serif;
+  margin: 5px;
+}
+
+div.contents form input {
+  margin: 5px;
+  width: 300px;
+}
+
+div.contents form input.submit {
+  margin: 5px;
+  width: 100px;
+}
+
+div.contents h1.uploader {
+  text-align: center;
+  font-size: 1em;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 100;
+  margin: 20px 0px 20px 0px;
+}
 
 
 footer {
@@ -131,6 +166,7 @@ footer p {
   padding: 0px;
   text-align: center;
   font-family: 'Open Sans', sans-serif;
+  font-size: 0.8em;
 }
 
 

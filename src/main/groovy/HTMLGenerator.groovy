@@ -50,7 +50,7 @@ class HTMLGenerator {
     }
 
     def output(String fileName) {
-        this.fileName = fileName
+        this.fileName = fileName + ".php"
     }
 
     def methodMissing(String methodName, args) {
@@ -63,14 +63,10 @@ class HTMLGenerator {
                 if (profilePicPath != null) {
                     if (template > 0) {
                         if (parentLocation != null) {
-                            if (new File(parentLocation).isDirectory()) {
-                                if (fileName != null) {
-                                    doHtml(this)
-                                } else {
-                                    println "output name is not defined"
-                                }
+                            if (fileName != null) {
+                                doHtml(this)
                             } else {
-                                println "directory location is wrong"
+                                println "output name is not defined"
                             }
                         } else {
                             println "directory location is not defined"
@@ -89,17 +85,27 @@ class HTMLGenerator {
         }
     }
 
-    public static void moveFileIntoOutFolder(String path, String dest) {
-        new File(path).eachFile { file->
-            if (file.file) {
-                File src = new File(file.getAbsolutePath()).newDataInputStream()
-                File dst = new File(dest + "\\" + file.getName()).newDataOutputStream()
-                dst << src
-            } else {
-                new File(dest + "\\" + file.getName()).mkdir()
-                moveFileIntoOutFolder(file.getAbsolutePath(),dest + "\\" + file.getName())
-            }
-        }
+    def static String indexPhpCode() {
+        return "<?php\n" +
+                "  foreach(glob('images/*.jpg') as \$file) {\n" +
+                "    \$dpath = substr(\$file, 0, -3) . \"desc\";\n" +
+                "    \$handle = fopen(\$dpath, \"r\");\n" +
+                "    if (\$handle) {\n" +
+                "      \$desc = fgets(\$handle);\n" +
+                "      fclose(\$handle);\n" +
+                "    } else {\n" +
+                "      echo \"ERROR OPENING DESCRIPTION FILE\";\n" +
+                "    }\n" +
+                "\n" +
+                "    echo <<< EOT\n" +
+                "    <div class=\"imageContainer\">\n" +
+                "      <img class=\"preview\" src=\"\$file\" alt=\"\$desc\"></img>\n" +
+                "      <p class=\"desc\">\$desc</p>\n" +
+                "    </div>\n" +
+                "EOT;\n" +
+                "\n" +
+                "  }\n" +
+                "?>"
     }
 
     def static templateOne(HTMLGenerator htmlDsl) {
@@ -155,7 +161,7 @@ class HTMLGenerator {
             head {
                 title(htmlDsl.name)
                 meta(charset: "utf-8")
-                link(href: "css/style2.css", rel: "stylesheet", type: "text/css", charset: "utf-8")
+                link(href: "css/style.css", rel: "stylesheet", type: "text/css", charset: "utf-8")
             }
             body {
                 div class: "lightbox", {
@@ -175,15 +181,14 @@ class HTMLGenerator {
                         }
                         h2 {
                             mkp.yield htmlDsl.description
+                            a href: "php/upload.php", {
+                                mkp.yield "Upload"
+                            }
                         }
                     }
                     div class: "contents", {
-                        div class: "imageContainer", {
-                            img(class: "preview", src: "images/1.jpg", alt: "Lorem ipsum1")
-                            p(class: "desc", "Lorem ipsum") {
-                                mkp.yield ""
-                            }
-                        }
+                        mkp.yieldUnescaped "\n"
+                        mkp.yieldUnescaped indexPhpCode()
 
                         div class: "clearfix", {
                             mkp.yield ""
@@ -224,7 +229,8 @@ class HTMLGenerator {
             directory.mkdirs()
         }
 
-//        moveFileIntoOutFolder("resources/", htmlDsl.parentLocation)
+        createAvatar(htmlDsl.profilePicPath, htmlDsl.parentLocation)
+        CopyWebDirectories.moveFileIntoOutFolder("resources", htmlDsl.parentLocation)
 
         File file = new File(htmlDsl.parentLocation, htmlDsl.fileName);
         if (file.exists()) {
