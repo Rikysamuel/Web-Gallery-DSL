@@ -1,10 +1,6 @@
 
 $(document).ready(function(){
 
-	$("main").animate({
-		opacity:'1'
-	},800);
-
 	//Clicked a preview. opens up lightbox
 	$("img.preview").click(function() {
 		imageSource = $(this).attr("src");

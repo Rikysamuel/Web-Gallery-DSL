@@ -1,0 +1,3 @@
+To Use (linux):
+backup your apache's /var/www/html folder.
+run deploy.sh
