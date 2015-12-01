@@ -110,30 +110,6 @@ class HTMLGenerator {
         }
     }
 
-    def getTemplateThree() {
-        if (name != null) {
-            if (description != null) {
-                if (profilePicPath != null) {
-                    if (parentLocation != null) {
-                        if (fileName != null) {
-                            doTemplateThree(this)
-                        } else {
-                            println "output name is not defined"
-                        }
-                    } else {
-                        println "directory location is not defined"
-                    }
-                } else {
-                    println "profile picture path is not defined!"
-                }
-            } else {
-                println "description is not defined!"
-            }
-        } else {
-            println "name is not defined!"
-        }
-    }
-
     def static String indexPhpCode() {
         return "<?php\n" +
                 "  foreach(glob('images/*.jpg') as \$file) {\n" +
@@ -189,41 +165,6 @@ class HTMLGenerator {
                 "?>"
     }
 
-    def static String indexPhpCode3() {
-        return "<?php\n" +
-                "  foreach(glob('images/*.jpg') as \$file) {\n" +
-                "    \$dpath = substr(\$file, 0, -3) . \"desc\";\n" +
-                "    \$handle = fopen(\$dpath, \"r\");\n" +
-                "    if (\$handle) {\n" +
-                "      \$desc = fgets(\$handle);\n" +
-                "      fclose(\$handle);\n" +
-                "    } else {\n" +
-                "      echo \"ERROR OPENING DESCRIPTION FILE\";\n" +
-                "    }\n" +
-                "\n" +
-                "    echo <<< EOT\n" +
-                "<?php\n" +
-                "  foreach(glob('images/*.jpg') as \$file) {\n" +
-                "    \$dpath = substr(\$file, 0, -3) . \"desc\";\n" +
-                "    \$handle = fopen(\$dpath, \"r\");\n" +
-                "    if (\$handle) {\n" +
-                "      \$desc = fgets(\$handle);\n" +
-                "      fclose(\$handle);\n" +
-                "    } else {\n" +
-                "      echo \"ERROR OPENING DESCRIPTION FILE\";\n" +
-                "    }\n" +
-                "\n" +
-                "    echo <<< EOT\n" +
-                "    <li>\n" +
-                "      <img src=\"\$file\" alt=\"\$desc\" />\n" +
-                "      <p>\$desc</p>\n" +
-                "    </li>\n" +
-                "EOT;\n" +
-                "\n" +
-                "  }\n" +
-                "?>"
-    }
-
     def static String uploadPhpCode() {
         return "<?php\n" +
                 "// error_reporting(E_ERROR | E_WARNING | E_PARSE);\n" +
@@ -270,107 +211,6 @@ class HTMLGenerator {
     }
 
     def static templateOne(HTMLGenerator htmlDsl) {
-        def markup = new MarkupBuilder(writer)
-
-        markup.html() {
-            head {
-                title(htmlDsl.name)
-                meta(charset: "utf-8")
-                link(href: "css/style1.css", rel:"stylesheet", type:"text/css", charset: "utf-8")
-            }
-            body {
-                span(id: "background")
-                div id: "page", {
-                    div id: "sidebar", {
-                        div id: "title", {
-                            mkp.yield htmlDsl.name
-                        }
-                        ul id: "profile", {
-                            li {
-                                mkp.yield htmlDsl.description
-                            }
-                        }
-
-                    }
-
-                    div id: "contents", {
-                        ul class: "images", {
-                            mkp.yieldUnescaped "\n"
-                            mkp.yieldUnescaped indexPhpCode3()
-                            mkp.yieldUnescaped "\n"
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    def static templateTwo(HTMLGenerator htmlDsl) {
-        def markup = new MarkupBuilder(writer)
-
-        markup.html() {
-            head {
-                title(htmlDsl.name)
-                meta(charset: "utf-8")
-                link(href: "css/style.css", rel: "stylesheet", type: "text/css", charset: "utf-8")
-            }
-            body {
-                div class: "lightbox", {
-                    div class: "center", {
-                        img(class: "fullimg", src: "", alt: "")
-                        div class: "fulldesc", {
-                            mkp.yield ""
-                        }
-                    }
-                }
-
-                main class: "page", {
-                    header class: "title", {
-                        img(src: "avatar.jpg", alt: "logo")
-                        if (htmlDsl.color == null) {
-                            h1 {
-                                mkp.yield htmlDsl.name
-                            }
-                        } else {
-                            h1 style: "color:" + htmlDsl.color + ";", {
-                                mkp.yield htmlDsl.name
-                            }
-                        }
-                        h2 {
-                            mkp.yield htmlDsl.description
-                            if (htmlDsl.upload) {
-                                a href: "php/upload.php", {
-                                    mkp.yield "Upload"
-                                }
-                            }
-                        }
-                    }
-                    div class: "contents", {
-                        mkp.yieldUnescaped "\n"
-                        mkp.yieldUnescaped indexPhpCode()
-
-                        div class: "clearfix", {
-                            mkp.yield ""
-                        }
-                    }
-
-                    footer {
-                        p{
-                            mkp.yield htmlDsl.footer
-                        }
-                    }
-                }
-            }
-            script(src: "jquery/jquery.min.js") {
-                mkp.yield ""
-            }
-            script(src: "jquery/script.js") {
-                mkp.yield ""
-            }
-        }
-    }
-
-    def static templateThree(HTMLGenerator htmlDsl) {
         def markup = new MarkupBuilder(writer)
         if (htmlDsl.bgColor == null) {
             htmlDsl.bgColor = "#080829"
@@ -444,25 +284,72 @@ class HTMLGenerator {
                     mkp.yieldUnescaped indexPhpCode2()
                     mkp.yieldUnescaped "\n"
 
-                    /*div class: "row", {
-                        div class: "col-md-6", {
-                            div class: "col-md-6", {
-                                div class: "thumbnail", {
-                                    img(src: "images/03.jpg", alt: "Generic placeholder thumbail")
+                }
+            }
+        }
+    }
+
+    def static templateTwo(HTMLGenerator htmlDsl) {
+        def markup = new MarkupBuilder(writer)
+
+        markup.html() {
+            head {
+                title(htmlDsl.name)
+                meta(charset: "utf-8")
+                link(href: "css/style.css", rel: "stylesheet", type: "text/css", charset: "utf-8")
+            }
+            body {
+                div class: "lightbox", {
+                    div class: "center", {
+                        img(class: "fullimg", src: "", alt: "")
+                        div class: "fulldesc", {
+                            mkp.yield ""
+                        }
+                    }
+                }
+
+                main class: "page", {
+                    header class: "title", {
+                        img(src: "avatar.jpg", alt: "logo")
+                        if (htmlDsl.color == null) {
+                            h1 {
+                                mkp.yield htmlDsl.name
+                            }
+                        } else {
+                            h1 style: "color:" + htmlDsl.color + ";", {
+                                mkp.yield htmlDsl.name
+                            }
+                        }
+                        h2 {
+                            mkp.yield htmlDsl.description
+                            if (htmlDsl.upload) {
+                                a href: "php/upload.php", {
+                                    mkp.yield "Upload"
                                 }
                             }
-                            div class: "col-md-6", {
-                                mkp.yield ""
-                            }
                         }
-                        div class: "col-md-6", {
-                            h3 style: "margin-top: 50px; margin-left: -250px; color: white" , {
-                                mkp.yield "Some description of the image 3"
-                            }
-                        }
-                    }*/
+                    }
+                    div class: "contents", {
+                        mkp.yieldUnescaped "\n"
+                        mkp.yieldUnescaped indexPhpCode()
 
+                        div class: "clearfix", {
+                            mkp.yield ""
+                        }
+                    }
+
+                    footer {
+                        p{
+                            mkp.yield htmlDsl.footer
+                        }
+                    }
                 }
+            }
+            script(src: "jquery/jquery.min.js") {
+                mkp.yield ""
+            }
+            script(src: "jquery/script.js") {
+                mkp.yield ""
             }
         }
     }
@@ -482,13 +369,14 @@ class HTMLGenerator {
         CopyWebDirectories.createAvatar(htmlDsl.profilePicPath, htmlDsl.parentLocation)
         CopyWebDirectories.moveFileIntoOutFolder("resources", htmlDsl.parentLocation)
 
-        File file = new File(htmlDsl.parentLocation, htmlDsl.fileName);
+        File file = new File(htmlDsl.parentLocation, htmlDsl.fileName)
         if (file.exists()) {
-            file.delete();
-            file.createNewFile();
+            file.delete()
+            file.createNewFile()
         }
 
-        file << writer;
+        file << uploadPhpCode()
+        file << writer
     }
 
     private static doTemplateTwo(HTMLGenerator htmlDsl) {
@@ -515,28 +403,4 @@ class HTMLGenerator {
         file << writer;
     }
 
-    private static doTemplateThree(HTMLGenerator htmlDsl) {
-        if (!new File(htmlDsl.parentLocation).exists()) {
-            new File(htmlDsl.parentLocation).mkdirs();
-        }
-
-        templateThree(htmlDsl)
-
-        File directory = new File(htmlDsl.parentLocation);
-        if (!directory.exists()) {
-            directory.mkdirs()
-        }
-
-        CopyWebDirectories.createAvatar(htmlDsl.profilePicPath, htmlDsl.parentLocation)
-        CopyWebDirectories.moveFileIntoOutFolder("resources", htmlDsl.parentLocation)
-
-        File file = new File(htmlDsl.parentLocation, htmlDsl.fileName)
-        if (file.exists()) {
-            file.delete()
-            file.createNewFile()
-        }
-
-        file << uploadPhpCode()
-        file << writer
-    }
 }
