@@ -298,7 +298,7 @@ class HTMLGenerator {
                 meta(charset: "utf-8")
                 link(href: "css/style.css", rel: "stylesheet", type: "text/css", charset: "utf-8")
             }
-            body {
+            body style: "padding: 50px 20px 0px; background: " + htmlDsl.bgColor + ";", {
                 div class: "lightbox", {
                     div class: "center", {
                         img(class: "fullimg", src: "", alt: "")
